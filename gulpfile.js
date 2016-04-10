@@ -22,7 +22,13 @@ gulp.task('html', function() {
 
 // Concatenate and minify scripts
 gulp.task('scripts', function() {
-	return gulp.src(['src/js/knockout-3.4.0.js', 'src/js/main.js'])
+	return gulp.src(['src/js/knockout-3.4.0.js',
+		'src/js/location.js',
+		'src/js/locations.js',
+		'src/js/app-view.js',
+		'src/js/location-view.js',
+		'src/js/view-model.js',
+		'src/js/app.js'])
 	.pipe(concat('main.js'))
 	.pipe(rename({suffix: '.min'}))
 	.pipe(uglify())
