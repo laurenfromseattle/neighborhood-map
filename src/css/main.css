@@ -1,4 +1,10 @@
-main {
+/*	Color palette from http://www.lolcolors.com/
+	pale blue: #e1eef6
+	orange: #ff5f2e
+	yellow: #fcbe32
+	teal: #004e66	*/
+
+#map-div {
 	height: 100vh;
 	width: 100vw;
 }

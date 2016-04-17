@@ -8,6 +8,7 @@ var rename = require('gulp-rename');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var minifyCSS = require('gulp-clean-css');
+var order = require('gulp-order');
 
 // Replace asset paths and minify HTML
 gulp.task('html', function() {
@@ -22,13 +23,7 @@ gulp.task('html', function() {
 
 // Concatenate and minify scripts
 gulp.task('scripts', function() {
-	return gulp.src(['src/js/knockout-3.4.0.js',
-		'src/js/location.js',
-		'src/js/locations.js',
-		'src/js/app-view.js',
-		'src/js/location-view.js',
-		'src/js/view-model.js',
-		'src/js/app.js'])
+	return gulp.src('src/js/*.js')
 	.pipe(concat('main.js'))
 	.pipe(rename({suffix: '.min'}))
 	.pipe(uglify())
@@ -37,7 +32,7 @@ gulp.task('scripts', function() {
 
 // Concatenate and minify css
 gulp.task('styles', function() {
-	return gulp.src(['src/css/*.css'])
+	return gulp.src('src/css/*.css')
 	.pipe(concat('main.css'))
 	.pipe(rename({suffix: '.min'}))
 	.pipe(minifyCSS())
