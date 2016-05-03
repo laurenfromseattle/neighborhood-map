@@ -21,16 +21,19 @@
 	<body>
 
 		<main>
-			<div id="map-div" data-bind="html: mapInit()"></div>
+			<div id="sidebar">
+				<select data-bind="options: categories, optionsCaption: 'Filter by cuisine type...', value: selectedCuisine"></select>
+				<ul data-bind="foreach: locations">
+					<li data-bind="text: name"></li>
+				</ul>
+			</div>
+			<div id="map-div"></div>
 		</main>
 
-
-
-
-
 		<script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsY5n0dP1_Tn6AraoKwCael_MxHUFlupc"></script>
+		<script type='text/javascript' src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsY5n0dP1_Tn6AraoKwCael_MxHUFlupc"></script>
 		<script type='text/javascript' src="js/lib/knockout-3.4.0.js"></script>
+		<script type='text/javascript' src="js/lib/oauth-signature.min.js"></script>
 		<!-- build:js -->
 		<script type='text/javascript' src="js/app.js"></script>
 		<!-- endbuild -->
