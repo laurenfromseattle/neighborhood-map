@@ -11,6 +11,7 @@
 
 		<title>Neighborhood Map</title>
 
+		<link rel='stylesheet' <link href='https://fonts.googleapis.com/css?family=Kalam:400,700'>
 		<!-- build:css -->
 		<link rel="stylesheet" href="css/normalize.css">
 		<link rel="stylesheet" href="css/main.css">
@@ -22,9 +23,12 @@
 
 		<main>
 			<div id="sidebar">
-				<select data-bind="options: categories, optionsCaption: 'Filter by cuisine type...', value: selectedCuisine"></select>
-				<ul data-bind="foreach: locations">
-					<li data-bind="text: name"></li>
+				<div class="sidebar-heading">
+					<select data-bind="options: cuisines, optionsCaption: 'Filter by cuisine type...', value: selectedCuisine, enable: !filterSelected()"></select>
+					<button class="button-filter" data-bind="click: clearFilter, enable: filterSelected">Clear Filter</button>
+				</div>
+				<ul class="location-list" data-bind="foreach: locations">
+					<li class="location-list-item" data-bind="text: name"></li>
 				</ul>
 			</div>
 			<div id="map-div"></div>

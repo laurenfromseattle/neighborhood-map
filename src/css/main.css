@@ -3,14 +3,64 @@
 	orange: #ff5f2e
 	yellow: #fcbe32
 	teal: #004e66	*/
+/************************************************
+GLOBAL
+************************************************/
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+	font-family: 'Kalam', sans-serif;
+}
 
 #map-div {
 	height: 100vh;
-	width: 70%;
+	width: 100%;
 }
 
 #sidebar {
-	height: 100vh;
-	width: 30%;
-	float:left;
+	background-color: #05323e;
+    max-height: 100vh;
+    min-width: 320px;
+    overflow: auto;
+    padding: 0;
+    position: absolute;
+    z-index: 1;
+}
+
+.sidebar-heading {
+	display: flex;
+    justify-content: flex-start;
+	padding: 10px;
+}
+
+.sidebar-heading select {
+	margin-right: 10px;
+}
+
+.button-filter {
+
+}
+
+.location-list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.location-list-item {
+	padding: 10px;
+}
+
+.location-list-item:nth-child(odd) {
+	background-color: #e1eef6;
+}
+
+.location-list-item:nth-child(even) {
+	background-color: #fff;
 }

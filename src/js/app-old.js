@@ -267,14 +267,6 @@ var locationModel = (function () {
 									}
 								});
 						});
-
-						/* Sort method for location objects courtesy of Stack Overflow, Ron Tornambe
-						http://stackoverflow.com/questions/8900732/javascript-sort-objects-in-an-array-
-						alphabetically-on-one-property-of-the-arra
-						*/
-						viewModel.locations.sort(function(a, b) {
-							return a.name.localeCompare(b.name);
-						});
 						viewModel.cuisines.sort();
 						updateParameters();
 						updateSignature();
@@ -305,12 +297,10 @@ var locationModel = (function () {
 
 var viewModel = (function () {
 
+	var self = this;
 	var mapDiv = document.getElementById('map-div');
 	var gmarkers = [];
 	var map = new google.maps.Map(mapDiv, mapModel.getMapOptions());
-	var locations = ko.observableArray([]);
-	var cuisines = ko.observableArray([]);
-	var selectedCuisine = ko.observable();
 
 
 	/* Render map using mapOptions from mapModel.
@@ -346,80 +336,50 @@ var viewModel = (function () {
 					lng: obj.location.coordinate.longitude
 				},
 				map: map,
-				icon: 'img/map-marker.svg',
 				title: obj.name
 			});
 
 			gmarkers.push(marker);
 	};
 
-	var filteredLocations = ko.computed(function() {
-
-		/* If the user has not selected a filter, it is undefined and this
-		   code block will not run. */
-		if (selectedCuisine() !== undefined) {
-
-			/* Locations that do not match the cuisine type selected by
-			   the user are removed from the array. */
-			locations.remove( function (item) {
-
-				var filterOut = true;
-
-				/* Yelp stores the cuisine categories in multiple arrays for each object.
-				   We have to loop through them all and check if the value of
-				   the first index matches our cuisine type. If it does, the
-				   location stays. Once the loop is done and if none of the location's
-				   categories match, the location is removed from the observable array. */
-				$.each( item.categories, function( index, value) {
-					if (value[1] === selectedCuisine()) {
-						filterOut = false;
-						return filterOut;
-					}
-				});
-
-				return filterOut;
-			});
+	/*var filterLocations = function() {
+		var cuisine = this.selectedCuisine();
+		if (cuisine !== undefined) {
+			this.locations.pop();
 		}
-
-		/* This block checks the gmarker array against what we have remaining
-		   in the observable location array and removes the marker from the map
-		   if the location is no longer in the array. */
-		$.each(gmarkers, function (index, value ) {
-			var found = false;
-			$.each(locations(), function ( key, location ) {
-				if (location.name.indexOf(value.title) !== -1) {
-					found = true;
+		if (cuisine !== undefined) {
+		this.locations.remove( function (item) {
+			var filterOut = false;
+			$.each( item.categories, function( index, value) {
+				console.log(value[1]);
+				console.log(cuisine);
+				if (value[1] === cuisine) {
+					filterOut = true;
+					return filterOut;
 				}
 			});
-			if (!found) {
-				value.setMap(null);
-			}
+
+			return filterOut;
 		});
+		}
+	};*/
+
+	var selectedCuisine = ko.observable();
+
+	var filteredList = ko.computed(function() {
+		if (selectedCuisine() !== undefined) {
+			console.log(self.locations);
+		}
 	});
 
-	/* Status of filter. If true, the clear button is enabled while the filter list is disabled.*/
-	var filterSelected = ko.computed(function() {
-		return (selectedCuisine() !== undefined);
-	});
-
-	/* When user clicks on clear button, locations repopulate with the original list and
-	   selectedCuisine returns to undefined. Markers are redrawn. */
-	var clearFilter = function() {
-		selectedCuisine(undefined);
-		/* Using a copy of staticLocationList. Otherwise, we modify it, which we don't want to do. */
-		locations(locationModel.staticLocationList.slice());
-		$.each(gmarkers, function( index, value ) {
-			value.setMap(map);
-		});
-	};
 
 	renderMap();
 
 	return {
 
-		locations: locations,
+		locations: ko.observableArray([]),
 
-		cuisines: cuisines,
+		cuisines: ko.observableArray([]),
 
 		selectedCuisine: selectedCuisine,
 
@@ -427,11 +387,7 @@ var viewModel = (function () {
 
 		renderMarker: renderMarker,
 
-		filteredLocations: filteredLocations,
-
-		filterSelected: filterSelected,
-
-		clearFilter: clearFilter
+		filteredList: filteredList
 
 	};
 
