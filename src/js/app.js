@@ -307,6 +307,8 @@ var viewModel = (function () {
 
 	var mapDiv = document.getElementById('map-div');
 	var gmarkers = [];
+	var infowindow;
+	var openInfoWindow = [];
 	var map = new google.maps.Map(mapDiv, mapModel.getMapOptions());
 	var locations = ko.observableArray([]);
 	var cuisines = ko.observableArray([]);
@@ -340,6 +342,7 @@ var viewModel = (function () {
 	};
 
 	var renderMarker = function( obj ) {
+
 			var marker = new google.maps.Marker({
 				position: {
 					lat: obj.location.coordinate.latitude,
@@ -350,7 +353,45 @@ var viewModel = (function () {
 				title: obj.name
 			});
 
+
+			infowindow = new google.maps.InfoWindow({
+				content: '<p class="infowindow-location-name">' + obj.name + '</p>' +
+				'<p class="infowindow-location-address">' + obj.location.address[0] + '</p>' +
+				'<img class="infowindow-location-rating" src="' + obj.rating_img_url + '" />' +
+				'<a class="infowindow-location-link" href="' + obj.url +
+				'" target="_blank">Read reviews on Yelp</a>'
+			});
+
+			marker.addListener('click', (function(currentMarker, currentInfoWindow) {
+				return function() {
+					/* Once an infowindow is opened, we store it as a single item in an array.
+					   When a marker is clicked, we check the array to see if there is already
+					   a window open. If there is a window open, we close it and empty the array.
+					   Then we push the new infowindow into the array. The purpose is to prevent
+					   more than one infowindow from being open at the same time. */
+					if (openInfoWindow.length !== 0) {
+						openInfoWindow[0].close();
+						openInfoWindow = [];
+					}
+					openInfoWindow.push(currentInfoWindow);
+					currentMarker.setAnimation(google.maps.Animation.BOUNCE);
+					/* This timeout allows for one bounce of the marker before the infowindow appears. */
+    				setTimeout(function(){
+    					currentMarker.setAnimation(null);
+    					currentInfoWindow.open(map, currentMarker);
+    				}, 700);
+				};
+				/*clearInfoWindow();
+				infowindow.open(map, currentMarker); */
+			})(marker, infowindow));
+
 			gmarkers.push(marker);
+	};
+
+	var clearInfoWindow = function() {
+		if (infowindow) {
+			infowindow.close();
+		}
 	};
 
 	var filteredLocations = ko.computed(function() {
