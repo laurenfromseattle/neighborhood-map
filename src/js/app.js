@@ -399,16 +399,31 @@ var viewModel = (function () {
     				}, 700);
 
     				/* Adds a style to the sidebar list item if the marker is selected.
+    				   Scrolls to the list item.
     				   Same timeout as the bouncing marker. */
+    				var listItemHeight = 70;
+    				var scrollOffset;
+
     				setTimeout(function(){
     					$.each(locations(), function (index, value) {
     						if (locations()[index].id === currentMarker.id) {
     							locations()[index].selected(true);
+    							scrollOffset = index * listItemHeight;
+
+    							/* Animating the scrollTop took care of the issues with the scrollbar
+    							   changing height as things opened and closed and messing up the offset.
+    							   Now items always appear at the top after the scroll.
+    							*/
+    							$('.location-list').animate({
+    								scrollTop: scrollOffset
+    							}, 1000);
+
     						} else {
     							locations()[index].selected(false);
     						}
     					});
     				}, 700);
+
 				};
 
 			})(marker, infowindow));
@@ -504,10 +519,10 @@ var viewModel = (function () {
 	};
 
 	$('.sidebar-toggle').click(function() {
-		if ($('.sidebar-toggle').hasClass('toggle')) {
-			$('.sidebar-toggle').removeClass('toggle');
+		if ($('#sidebar').hasClass('toggle')) {
+			$('#sidebar').removeClass('toggle');
 		} else {
-			$('.sidebar-toggle').addClass('toggle');
+			$('#sidebar').addClass('toggle');
 		}
 	});
 
