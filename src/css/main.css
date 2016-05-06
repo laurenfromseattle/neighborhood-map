@@ -97,7 +97,7 @@ sidebar
     transition: all 0.8s;
 }
 
-.sidebar-toggle-open p:after {
+.toggle p:after {
 	-webkit-transform-origin: center center;
     -moz-transform-origin: center center;
     -ms-transform-origin: center center;
@@ -110,7 +110,7 @@ sidebar
     transform: rotate(-135deg);
 }
 
-.sidebar-toggle-open ~ .location-list {
+.toggle ~ .location-list {
 	max-height: 100vh;
 
 }
@@ -195,7 +195,7 @@ sidebar
 
 
 /************************************************
-map
+Map
 ************************************************/
 
 #map-div {
@@ -235,4 +235,30 @@ map
 
 .infowindow-location-link:hover {
 	background-color: #ff5f2e;
+}
+
+/************************************************
+Media Queries
+************************************************/
+ /* Extra Small Devices, Phones */
+@media only screen and (max-width: 480px) {
+
+	.location-list {
+		max-height: 100vh;
+	}
+
+	.toggle ~ .location-list {
+		max-height: 0;
+		-webkit-transition: max-height 1s;
+		-moz-transition: max-height 1s;
+		transition: max-height 1s;
+	}
+
+	.sidebar-toggle p:after {
+		content: '\f00d';
+	}
+
+	.slider {
+		display: none;
+	}
 }
