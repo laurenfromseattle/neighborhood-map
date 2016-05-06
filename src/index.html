@@ -27,6 +27,9 @@
 					<select data-bind="options: cuisines, optionsCaption: 'Filter by cuisine type...', value: selectedCuisine, enable: !filterSelected()"></select>
 					<button class="button-filter" data-bind="click: clearFilter, enable: filterSelected">Clear Filter</button>
 				</div>
+				<div class="sidebar-toggle sidebar-toggle-open">
+					<p>List View </p>
+				</div>
 				<ul class="location-list" data-bind="foreach: locations">
 					<li class="location-list-item" data-bind="css: { itemSelected: selected } ">
 						<p data-bind="text: name"></p>

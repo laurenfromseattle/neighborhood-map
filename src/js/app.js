@@ -495,6 +495,14 @@ var viewModel = (function () {
     	});
 	};
 
+	$('.sidebar-toggle').click(function() {
+		if ($('.sidebar-toggle').hasClass('sidebar-toggle-open')) {
+			$('.sidebar-toggle').removeClass('sidebar-toggle-open');
+		} else {
+			$('.sidebar-toggle').addClass('sidebar-toggle-open');
+		}
+	});
+
 	renderMap();
 
 	return {
