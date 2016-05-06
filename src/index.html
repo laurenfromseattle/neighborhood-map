@@ -28,7 +28,14 @@
 					<button class="button-filter" data-bind="click: clearFilter, enable: filterSelected">Clear Filter</button>
 				</div>
 				<ul class="location-list" data-bind="foreach: locations">
-					<li class="location-list-item" data-bind="text: name"></li>
+					<li class="location-list-item" data-bind="css: { itemSelected: selected } ">
+						<p data-bind="text: name"></p>
+						<div class="location-list-item-details">
+							<p data-bind="text: location.address[0]"></p>
+							<img data-bind="attr: { src: rating_img_url }" />
+							<a data-bind="attr: { href: url }">Read Reviews on Yelp</a>
+						</div>
+					</li>
 				</ul>
 			</div>
 			<div id="map-div"></div>

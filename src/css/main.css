@@ -64,6 +64,32 @@ sidebar
 	background-color: #fff;
 }
 
+.location-list-item.itemSelected {
+	background-color: #ff5f2e;
+	color: #fcbe32;
+	font-weight: 700;
+}
+.location-list-item-details {
+	background-color: #fff;
+	border: none;
+    color: #000;
+    list-style-type: none;
+    margin: 0 -10px -10px -10px;
+    max-height: 0;
+    overflow: hidden;
+    padding-left: 10px;
+    -webkit-transition: max-height 0.8s;
+	-moz-transition: max-height 0.8s;
+	transition: max-height 0.8s;
+}
+
+.itemSelected .location-list-item-details {
+    max-height: 120px;
+    border: 1px solid #ff5f2e;
+}
+
+
+
 /************************************************
 map
 ************************************************/
@@ -95,6 +121,7 @@ map
     display: block;
     margin: 5px auto;
     padding: 5px 10px;
+    text-align: center;
     text-decoration: none;
 }
 

@@ -245,6 +245,10 @@ var locationModel = (function () {
 					if (data.businesses.length > 0) {
 						$.each(data.businesses, function( key, value ) {
 
+							/* Adds an observable property that will track if that location's marker
+							is selected, adding a corresponding style to that location in the list. */
+							value.selected = ko.observable(false);
+
 							/* Pushes location object into observable array */
 							viewModel.locations.push( value );
 
@@ -350,7 +354,8 @@ var viewModel = (function () {
 				},
 				map: map,
 				icon: 'img/map-marker.svg',
-				title: obj.name
+				title: obj.name,
+				id: obj.id
 			});
 
 
@@ -362,6 +367,11 @@ var viewModel = (function () {
 				'" target="_blank">Read reviews on Yelp</a>'
 			});
 
+			google.maps.event.addListener(infowindow,'closeclick', function(){
+				clearInfoWindows();
+				clearSelected();
+			});
+
 			marker.addListener('click', (function(currentMarker, currentInfoWindow) {
 				return function() {
 					/* Once an infowindow is opened, we store it as a single item in an array.
@@ -369,29 +379,33 @@ var viewModel = (function () {
 					   a window open. If there is a window open, we close it and empty the array.
 					   Then we push the new infowindow into the array. The purpose is to prevent
 					   more than one infowindow from being open at the same time. */
-					if (openInfoWindow.length !== 0) {
-						openInfoWindow[0].close();
-						openInfoWindow = [];
-					}
+					clearInfoWindows();
+					clearSelected();
 					openInfoWindow.push(currentInfoWindow);
+
 					currentMarker.setAnimation(google.maps.Animation.BOUNCE);
 					/* This timeout allows for one bounce of the marker before the infowindow appears. */
     				setTimeout(function(){
     					currentMarker.setAnimation(null);
     					currentInfoWindow.open(map, currentMarker);
     				}, 700);
+
+    				/* Adds a style to the sidebar list item if the marker is selected.
+    				   Same timeout as the bouncing marker. */
+    				setTimeout(function(){
+    					$.each(locations(), function (index, value) {
+    						if (locations()[index].id === currentMarker.id) {
+    							locations()[index].selected(true);
+    						} else {
+    							locations()[index].selected(false);
+    						}
+    					});
+    				}, 700);
 				};
-				/*clearInfoWindow();
-				infowindow.open(map, currentMarker); */
+
 			})(marker, infowindow));
 
 			gmarkers.push(marker);
-	};
-
-	var clearInfoWindow = function() {
-		if (infowindow) {
-			infowindow.close();
-		}
 	};
 
 	var filteredLocations = ko.computed(function() {
@@ -399,6 +413,9 @@ var viewModel = (function () {
 		/* If the user has not selected a filter, it is undefined and this
 		   code block will not run. */
 		if (selectedCuisine() !== undefined) {
+
+			clearInfoWindows();
+			clearSelected();
 
 			/* Locations that do not match the cuisine type selected by
 			   the user are removed from the array. */
@@ -446,12 +463,36 @@ var viewModel = (function () {
 	/* When user clicks on clear button, locations repopulate with the original list and
 	   selectedCuisine returns to undefined. Markers are redrawn. */
 	var clearFilter = function() {
+
+		clearInfoWindows();
+		clearSelected();
+
 		selectedCuisine(undefined);
 		/* Using a copy of staticLocationList. Otherwise, we modify it, which we don't want to do. */
 		locations(locationModel.staticLocationList.slice());
+
+		/* Sort the list again. */
+		locations.sort(function(a, b) {
+			return a.name.localeCompare(b.name);
+		});
+
 		$.each(gmarkers, function( index, value ) {
 			value.setMap(map);
 		});
+
+	};
+
+	var clearInfoWindows = function() {
+		if (openInfoWindow.length !== 0) {
+			openInfoWindow[0].close();
+			openInfoWindow = [];
+		}
+	};
+
+	var clearSelected = function() {
+		$.each(locations(), function (index, value) {
+    		locations()[index].selected(false);
+    	});
 	};
 
 	renderMap();
