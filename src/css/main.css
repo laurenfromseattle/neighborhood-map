@@ -22,10 +22,34 @@ body {
 sidebar
 ************************************************/
 
+#heading-bar {
+	text-align: center;
+}
+
+#heading-bar h1 {
+	background-color: #ff5f2e;
+	color: #fcbe32;
+	margin: 0;
+}
+
+#heading-bar p {
+	align-items: center;
+	background-color: #e1eef6;
+	display: flex;
+	color: #000;
+	font-weight: 700;
+	justify-content: center;
+	margin: 0;
+}
+
+#heading-bar span {
+	padding: 10px;
+}
+
 #sidebar {
 	background-color: #05323e;
     max-height: 100vh;
-    min-width: 320px;
+    width: 320px;
     overflow: auto;
     padding: 0;
     position: absolute;
@@ -63,13 +87,14 @@ sidebar
 }
 
 .sidebar-toggle p:after {
-	content: 'x';
+	content: '\f067';
 	display: inline-block;
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -ms-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
+	font-family: FontAwesome;
+    -webkit-transition: all 0.8s;
+    -moz-transition: all 0.8s;
+    -ms-transition: all 0.8s;
+    -o-transition: all 0.8s;
+    transition: all 0.8s;
 }
 
 .sidebar-toggle-open p:after {
@@ -85,9 +110,23 @@ sidebar
     transform: rotate(-135deg);
 }
 
-.sidebar-toggle-open + .location-list {
+.sidebar-toggle-open ~ .location-list {
 	max-height: 100vh;
 
+}
+
+.slider {
+	cursor: move;
+	display: inline-block;
+}
+
+.slider p {
+	background-color: #ff5f2e;
+    border: 1px solid #fcbe32;
+    border-radius: 4px;
+    color: #fcbe32;
+    margin: 0 10px 10px 10px;
+    padding: 0 15px;
 }
 
 .location-list {
@@ -117,23 +156,40 @@ sidebar
 	color: #fcbe32;
 	font-weight: 700;
 }
+
 .location-list-item-details {
 	background-color: #fff;
 	border: none;
     color: #000;
+    font-weight: 400;
     list-style-type: none;
     margin: 0 -10px -10px -10px;
     max-height: 0;
+    padding: 0 10px;
     overflow: hidden;
-    padding-left: 10px;
     -webkit-transition: max-height 0.8s;
 	-moz-transition: max-height 0.8s;
 	transition: max-height 0.8s;
 }
 
+.location-list-item-details > a {
+	background-color: #05323e;
+    border-radius: 4px;
+    color: #fff;
+    display: block;
+    margin: 5px auto 10px auto;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.location-list-item-details > a:hover {
+	background-color: #ff5f2e;
+}
+
 .itemSelected .location-list-item-details {
-    max-height: 120px;
-    border: 1px solid #ff5f2e;
+    max-height: 500px;
+    border: 10px solid #ff5f2e;
 }
 
 
@@ -145,6 +201,10 @@ map
 #map-div {
 	height: 100vh;
 	width: 100%;
+}
+
+.gm-style {
+	font-family: 'Kalam', sans-serif;
 }
 
 .infowindow-location-name {

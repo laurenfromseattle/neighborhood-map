@@ -363,8 +363,10 @@ var viewModel = (function () {
 				content: '<p class="infowindow-location-name">' + obj.name + '</p>' +
 				'<p class="infowindow-location-address">' + obj.location.address[0] + '</p>' +
 				'<img class="infowindow-location-rating" src="' + obj.rating_img_url + '" />' +
+				'<p class="infowindow-location-review">' + obj.snippet_text + '</p>' +
 				'<a class="infowindow-location-link" href="' + obj.url +
-				'" target="_blank">Read reviews on Yelp</a>'
+				'" target="_blank">Read reviews on Yelp</a>',
+				maxWidth: 200
 			});
 
 			google.maps.event.addListener(infowindow,'closeclick', function(){
@@ -504,6 +506,12 @@ var viewModel = (function () {
 	});
 
 	renderMap();
+
+    $( "#sidebar" ).draggable({
+    	axis: 'x',
+    	containment: 'parent',
+    	handle: '.slider'
+    });
 
 	return {
 
