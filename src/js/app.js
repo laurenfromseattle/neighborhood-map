@@ -317,7 +317,6 @@ var viewModel = (function () {
 
 	var mapDiv = document.getElementById('map-div');
 	var gmarkers = [];
-	var infowindow;
 	var openInfoWindow = [];
 	var map = new google.maps.Map(mapDiv, mapModel.getMapOptions());
 	var locations = ko.observableArray([]);
@@ -365,7 +364,7 @@ var viewModel = (function () {
 			});
 
 
-			infowindow = new google.maps.InfoWindow({
+			marker.infowindow = new google.maps.InfoWindow({
 				content: '<p class="infowindow-location-name">' + obj.name + '</p>' +
 				'<p class="infowindow-location-address">' + obj.location.address[0] + '</p>' +
 				'<img class="infowindow-location-rating" src="' + obj.rating_img_url + '" />' +
@@ -375,7 +374,7 @@ var viewModel = (function () {
 				maxWidth: 200
 			});
 
-			google.maps.event.addListener(infowindow,'closeclick', function(){
+			google.maps.event.addListener(marker.infowindow,'closeclick', function(){
 				clearInfoWindows();
 				clearSelected();
 			});
@@ -426,9 +425,60 @@ var viewModel = (function () {
 
 				};
 
-			})(marker, infowindow));
+			})(marker, marker.infowindow));
 
 			gmarkers.push(marker);
+	};
+
+	/* This function runs when an item is clicked on the list.
+	   Linked to UI with knockout.
+	   This is just a repeat of the click even on the markers, above.
+	   Eventually need to refactor so that we are not repeating a huge block of code. */
+	var openMarker = function( data ) {
+		var currentMarker;
+		clearInfoWindows();
+		clearSelected();
+
+		$.each(gmarkers, function( index, value ) {
+			if (value.title === data.name) {
+				currentMarker = value;
+			}
+		});
+
+		openInfoWindow.push(currentMarker.infowindow);
+
+		currentMarker.setAnimation(google.maps.Animation.BOUNCE);
+		/* This timeout allows for one bounce of the marker before the infowindow appears. */
+    	setTimeout(function(){
+    		currentMarker.setAnimation(null);
+    		currentMarker.infowindow.open(map, currentMarker);
+    	}, 700);
+
+		/* Adds a style to the sidebar list item if the marker is selected.
+		   Scrolls to the list item.
+		   Same timeout as the bouncing marker. */
+		var listItemHeight = 70;
+		var scrollOffset;
+
+    	setTimeout(function(){
+			$.each(locations(), function (index, value) {
+				if (locations()[index].id === currentMarker.id) {
+					locations()[index].selected(true);
+					scrollOffset = index * listItemHeight;
+
+					/* Animating the scrollTop took care of the issues with the scrollbar
+					   changing height as things opened and closed and messing up the offset.
+					   Now items always appear at the top after the scroll.
+					*/
+					$('.location-list').animate({
+						scrollTop: scrollOffset
+					}, 1000);
+
+				} else {
+					locations()[index].selected(false);
+				}
+			});
+		}, 700);
 	};
 
 	var filteredLocations = ko.computed(function() {
@@ -550,7 +600,9 @@ var viewModel = (function () {
 
 		filterSelected: filterSelected,
 
-		clearFilter: clearFilter
+		clearFilter: clearFilter,
+
+		openMarker: openMarker
 
 	};
 

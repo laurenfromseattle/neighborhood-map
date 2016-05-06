@@ -48,8 +48,8 @@
 					</div>
 				</div>
 				<ul class="location-list" data-bind="foreach: locations">
-					<li class="location-list-item" data-bind="css: { itemSelected: selected } ">
-						<p class="location-list-item-name" data-bind="text: name"></p>
+					<li class="location-list-item" data-bind="css: { itemSelected: selected }">
+						<p class="location-list-item-name" data-bind="text: name, click: $parent.openMarker"></p>
 						<div class="location-list-item-details">
 							<p data-bind="text: location.address[0]"></p>
 							<img data-bind="attr: { src: rating_img_url }" />
