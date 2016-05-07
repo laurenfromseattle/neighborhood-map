@@ -265,7 +265,7 @@ Map
 }
 
 .loading {
-	background: #e1eef6 url(/img/loading-graphic.gif) center center no-repeat;
+	background: #e1eef6 url(../img/loading-graphic.gif) center center no-repeat;
 	position: relative;
 }
 
