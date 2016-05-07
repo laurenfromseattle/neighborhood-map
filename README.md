@@ -2,4 +2,4 @@
 
 ## Instructions
 
-[Load the App](http://laurenfromseattle.github.io/neighborhood-map/dist/index.html)
+[Load the App](https://laurenfromseattle.github.io/neighborhood-map/dist/index.html)
