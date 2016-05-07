@@ -8,9 +8,9 @@ var mapModel = (function (){
    			draggable: true,
     		zoom: (function() {
     			if ($( window ).width() < 500) {
-    				return 16;
+    				return 14;
     			} else {
-    				return 18;
+    				return 16;
     			}
     		})(),
     		styles: [
