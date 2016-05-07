@@ -3,7 +3,7 @@ var mapModel = (function (){
 	var map = {};
 	var mapBounds = {};
 	var mapOptions = {
-			center: { lat: 47.6264468, lng: -122.3502672 },
+			center: { lat: 47.624098, lng: -122.356438 },
    			scrollwheel: true,
    			draggable: true,
     		zoom: (function() {
@@ -164,6 +164,72 @@ var mapModel = (function (){
 
 var locationModel = (function () {
 
+	var apiCallCount = 0;
+	var defaultLocationList = [
+		{
+			categories: [
+				[ 'Dive Bars', 'divebars']
+			],
+			id: 'streamline-tavern-seattle-2',
+			location: {
+				address: [ '174 Roy St' ],
+				city: 'Seattle',
+				coordinate: {
+					latitude: 47.6256104,
+					longitude: -122.3528064
+				}
+			},
+			name: 'Streamline Tavern',
+			rating_img_url: 'https://s3-media2.fl.yelpcdn.com/assets/2/www/img/99493c12711e/ico/stars/v1/stars_4_half.png',
+			snippet_text: 'Great dive bar for some pool. Food is usually limited to peanuts. I mostly love it because it replaced Jabu\'s.',
+			url: 'http://www.yelp.com/biz/streamline-tavern-seattle-2?utm_campaign=yelp_api&utm_medium=api_v2_search&utm_source=pr1wuv4t-ZC9wqQWVsJ68g'
+		},
+		{
+			categories: [
+				['American (Traditional)', 'tradamerican'],
+				['Dive Bars', 'divebars'],
+				['Breakfast & Brunch', 'breakfast_brunch']
+			],
+			id: 'mecca-cafe-seattle',
+			location: {
+				address: [ '526 Queen Anne Ave N' ],
+				city: 'Seattle',
+				coordinate: {
+					latitude: 47.62412,
+					longitude: -122.35637
+				}
+			},
+			name: 'Mecca Cafe',
+			rating_img_url: 'https://s3-media4.fl.yelpcdn.com/assets/2/www/img/c2f3dd9799a5/ico/stars/v1/stars_4.png',
+			snippet_text: 'HUGE serving sizes of all-American diner food. Amazing bartenders. What more do you need?',
+			url: 'http://www.yelp.com/biz/mecca-cafe-seattle?utm_campaign=yelp_api&utm_medium=api_v2_search&utm_source=pr1wuv4t-ZC9wqQWVsJ68g'
+		}
+	];
+
+	var defaultState = function() {
+
+		viewModel.resetMapCenter( { lat: 47.624098, lng: -122.356438 } );
+
+			$.each(defaultLocationList, function ( key, value ) {
+
+				value.selected = ko.observable(false);
+
+				viewModel.locations.push( value );
+
+				staticLocationList.push( value );
+
+				viewModel.renderMarker( value );
+
+				$.each( value.categories, function( index, value) {
+					if (cuisines.indexOf( value[1]) === -1) {
+						viewModel.cuisines.push( value[1] );
+						cuisines.push( value[1] );
+					}
+				});
+			});
+
+	};
+
 	var staticLocationList = [];
 	var cuisines = [];
 
@@ -249,6 +315,9 @@ var locationModel = (function () {
 				dataType: 'jsonp',
 				success: function( data ) {
 					if (data.businesses.length > 0) {
+
+						apiCallCount++;
+
 						$.each(data.businesses, function( key, value ) {
 
 							/* Adds an observable property that will track if that location's marker
@@ -267,15 +336,15 @@ var locationModel = (function () {
 							   array so that we can add/remove markers from the map. */
 							viewModel.renderMarker( value ); // create marker
 
-								/* Pushes the location object's cuisine categories into
-								   observable and immutable cuisine arrays if they are not
-								   already there. This will give us a list for the dropdown filter. */
-								$.each( value.categories, function( index, value) {
-									if (cuisines.indexOf( value[1]) === -1) {
-										viewModel.cuisines.push( value[1] );
-										cuisines.push( value[1] );
-									}
-								});
+							/* Pushes the location object's cuisine categories into
+							   observable and immutable cuisine arrays if they are not
+							   already there. This will give us a list for the dropdown filter. */
+							$.each( value.categories, function( index, value) {
+								if (cuisines.indexOf( value[1]) === -1) {
+									viewModel.cuisines.push( value[1] );
+									cuisines.push( value[1] );
+								}
+							});
 						});
 
 						/* Sort method for location objects courtesy of Stack Overflow, Ron Tornambe
@@ -288,11 +357,23 @@ var locationModel = (function () {
 						viewModel.cuisines.sort();
 						updateParameters();
 						updateSignature();
-						apiCall();
+					} else {
+
+						if (apiCallCount === 0) {
+							alert('Sorry, Yelp can\'t find any restaurants in your area.');
+
+							defaultState();
+						}
+
 					}
 				},
+
 				error: function() {
-					alert( 'Sorry. Locations failed to load.');
+
+					alert( 'Sorry. We had issues talking to Yelp. Here are some locations we love in' +
+						' Lower Queen Anne, Seattle.');
+
+					defaultState();
 				}
 			});
 		};
@@ -334,12 +415,8 @@ var viewModel = (function () {
 			var mapOptions = mapModel.getMapOptions();
 			mapOptions.center = { lat: lat, lng: lng };
 
-			console.log(map);
-
 			map = new google.maps.Map(mapDiv, mapOptions);
 			renderMap();
-
-			console.log(map);
 		};
 
 		var error = function(err) {
@@ -406,6 +483,10 @@ var viewModel = (function () {
 	var setMapBounds = function() {
 		var bounds = map.getBounds(); // getBounds() is a google maps API method
 		mapModel.updateMapBounds( bounds );
+	};
+
+	var resetMapCenter = function( coords ) {
+		map.setCenter( coords );
 	};
 
 	var renderMarker = function( obj ) {
@@ -662,11 +743,12 @@ var viewModel = (function () {
 
 		clearFilter: clearFilter,
 
-		openMarker: openMarker
+		openMarker: openMarker,
+
+		resetMapCenter: resetMapCenter
 
 	};
 
 })();
 
 ko.applyBindings(viewModel);
-
