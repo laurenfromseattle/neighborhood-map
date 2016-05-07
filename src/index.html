@@ -35,7 +35,7 @@
 			<div id="sidebar">
 				<div class="sidebar-heading-container">
 					<div class="sidebar-heading-filter">
-						<select data-bind="options: cuisines, optionsCaption: 'Filter by cuisine type...', value: selectedCuisine, enable: !filterSelected()"></select>
+						<select data-bind="options: cuisines, optionsCaption: 'Filter by cuisine...', value: selectedCuisine, enable: !filterSelected()"></select>
 						<button class="button-filter" data-bind="click: clearFilter, enable: filterSelected">Clear Filter</button>
 					</div>
 					<div class="sidebar-heading-controls">
@@ -59,7 +59,7 @@
 					</li>
 				</ul>
 			</div>
-			<div id="map-div"></div>
+			<div id="map-div" class="loading"></div>
 		</main>
 
 		<script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>

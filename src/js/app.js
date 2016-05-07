@@ -318,18 +318,76 @@ var viewModel = (function () {
 	var mapDiv = document.getElementById('map-div');
 	var gmarkers = [];
 	var openInfoWindow = [];
-	var map = new google.maps.Map(mapDiv, mapModel.getMapOptions());
+	var map;
 	var locations = ko.observableArray([]);
 	var cuisines = ko.observableArray([]);
 	var selectedCuisine = ko.observable();
 
+	/* TO DO: GEOLOCATION */
+
+	if (navigator.geolocation) {
+
+		var success = function(position) {
+			var lat = position.coords.latitude;
+			var lng = position.coords.longitude;
+
+			var mapOptions = mapModel.getMapOptions();
+			mapOptions.center = { lat: lat, lng: lng };
+
+			console.log(map);
+
+			map = new google.maps.Map(mapDiv, mapOptions);
+			renderMap();
+
+			console.log(map);
+		};
+
+		var error = function(err) {
+
+			if (err.code === 1) {
+				alert( 'Don\'t want us to know where you are? That makes it a bit difficult' +
+			' to help you find a restaurant! Here are some places you can check out next time' +
+			' you are in Lower Queen Anne, Seattle.' );
+			} else if (err.code === 2) {
+				alert( 'We had a problem locating you. Here are some places you can check' +
+				' out next time you are in Lower Queen Anne, Seattle.' );
+			} else {
+				alert( 'Locating you is taking too much time. Here are some places you can check' +
+				' out next time you are in Lower Queen Anne, Seattle.' );
+			}
+
+			map = new google.maps.Map(mapDiv, mapModel.getMapOptions());
+			renderMap();
+		};
+
+		var options = {
+		  timeout: 5000,
+		  maximumAge: 0
+		};
+
+		navigator.geolocation.getCurrentPosition(success, error, options);
+
+	} else {
+
+		map = new google.maps.Map(mapDiv, mapModel.getMapOptions());
+		renderMap();
+
+		alert('Your browser does not support geolocation. That means we have no idea where you are.' +
+			' Here are some places you can check out next time you are in Lower Queen Anne, Seattle.');
+	}
+
+	/* Removes class that holds animated gif in the map div. */
+	var removeLoadingState = function() {
+		$(mapDiv).removeClass('loading');
+	};
 
 	/* Render map using mapOptions from mapModel.
 	   Store map object in mapModel.
 	   Add event listener to calculate the bounding rectangle after map loads.
 	   Make API call to get locations in bounding rectangle. */
-
 	var renderMap = function() {
+
+		removeLoadingState();
 
 		mapModel.setMap(map);
 
@@ -398,30 +456,27 @@ var viewModel = (function () {
     				}, 700);
 
     				/* Adds a style to the sidebar list item if the marker is selected.
-    				   Scrolls to the list item.
-    				   Same timeout as the bouncing marker. */
+    				   Scrolls to the list item. */
     				var listItemHeight = 70;
     				var scrollOffset;
 
-    				setTimeout(function(){
-    					$.each(locations(), function (index, value) {
-    						if (locations()[index].id === currentMarker.id) {
-    							locations()[index].selected(true);
-    							scrollOffset = index * listItemHeight;
+					$.each(locations(), function (index, value) {
+						if (locations()[index].id === currentMarker.id) {
+							locations()[index].selected(true);
+							scrollOffset = index * listItemHeight;
 
-    							/* Animating the scrollTop took care of the issues with the scrollbar
-    							   changing height as things opened and closed and messing up the offset.
-    							   Now items always appear at the top after the scroll.
-    							*/
-    							$('.location-list').animate({
-    								scrollTop: scrollOffset
-    							}, 1000);
+							/* Animating the scrollTop took care of the issues with the scrollbar
+							   changing height as things opened and closed and messing up the offset.
+							   Now items always appear at the top after the scroll.
+							*/
+							$('.location-list').animate({
+								scrollTop: scrollOffset
+							}, 1000);
 
-    						} else {
-    							locations()[index].selected(false);
-    						}
-    					});
-    				}, 700);
+						} else {
+							locations()[index].selected(false);
+						}
+					});
 
 				};
 
@@ -435,32 +490,35 @@ var viewModel = (function () {
 	   This is just a repeat of the click even on the markers, above.
 	   Eventually need to refactor so that we are not repeating a huge block of code. */
 	var openMarker = function( data ) {
-		var currentMarker;
-		clearInfoWindows();
-		clearSelected();
+		/* This block only runs if the item on the list is not already selected. This allows us to 'close'
+		   the location on the second click. */
+		if ( data.selected() === false ) {
+			var currentMarker;
+			clearInfoWindows();
+			clearSelected();
 
-		$.each(gmarkers, function( index, value ) {
-			if (value.title === data.name) {
-				currentMarker = value;
-			}
-		});
+			$.each(gmarkers, function( index, value ) {
+				if (value.title === data.name) {
+					currentMarker = value;
+				}
+			});
 
-		openInfoWindow.push(currentMarker.infowindow);
+			openInfoWindow.push(currentMarker.infowindow);
 
-		currentMarker.setAnimation(google.maps.Animation.BOUNCE);
-		/* This timeout allows for one bounce of the marker before the infowindow appears. */
-    	setTimeout(function(){
-    		currentMarker.setAnimation(null);
-    		currentMarker.infowindow.open(map, currentMarker);
-    	}, 700);
+			currentMarker.setAnimation(google.maps.Animation.BOUNCE);
+			/* This timeout allows for one bounce of the marker before the infowindow appears. */
+	    	setTimeout(function(){
+	    		currentMarker.setAnimation(null);
+	    		currentMarker.infowindow.open(map, currentMarker);
+	    	}, 700);
 
-		/* Adds a style to the sidebar list item if the marker is selected.
-		   Scrolls to the list item.
-		   Same timeout as the bouncing marker. */
-		var listItemHeight = 70;
-		var scrollOffset;
+			/* Adds a style to the sidebar list item if the marker is selected.
+			   Scrolls to the list item.
+			   Same timeout as the bouncing marker. */
+			var listItemHeight = 70;
+			var scrollOffset;
 
-    	setTimeout(function(){
+
 			$.each(locations(), function (index, value) {
 				if (locations()[index].id === currentMarker.id) {
 					locations()[index].selected(true);
@@ -478,7 +536,11 @@ var viewModel = (function () {
 					locations()[index].selected(false);
 				}
 			});
-		}, 700);
+
+		} else {
+			clearInfoWindows();
+			clearSelected();
+		}
 	};
 
 	var filteredLocations = ko.computed(function() {
@@ -576,8 +638,6 @@ var viewModel = (function () {
 		}
 	});
 
-	renderMap();
-
     $( "#sidebar" ).draggable({
     	axis: 'x',
     	containment: 'parent',
@@ -609,3 +669,4 @@ var viewModel = (function () {
 })();
 
 ko.applyBindings(viewModel);
+
