@@ -418,9 +418,12 @@ var viewModel = (function () {
 			mapOptions.center = { lat: lat, lng: lng };
 
 			if (typeof google === 'object' && typeof google.maps === 'object') {
-				map = new google.maps.Map(mapDiv, mapOptions);
+ 				map = new google.maps.Map(mapDiv, mapOptions);
+
 				renderMap();
+
 			} else {
+
 				alert('Sorry, Google Maps data can\'t be loaded.');
 			}
 		};
