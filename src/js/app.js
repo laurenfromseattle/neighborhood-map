@@ -227,7 +227,6 @@ var locationModel = (function () {
 					}
 				});
 			});
-
 	};
 
 	var staticLocationList = [];
@@ -571,6 +570,7 @@ var viewModel = (function () {
 	   This is just a repeat of the click even on the markers, above.
 	   Eventually need to refactor so that we are not repeating a huge block of code. */
 	var openMarker = function( data ) {
+
 		/* This block only runs if the item on the list is not already selected. This allows us to 'close'
 		   the location on the second click. */
 		if ( data.selected() === false ) {
@@ -619,6 +619,7 @@ var viewModel = (function () {
 			});
 
 		} else {
+
 			clearInfoWindows();
 			clearSelected();
 		}
@@ -645,9 +646,12 @@ var viewModel = (function () {
 				   location stays. Once the loop is done and if none of the location's
 				   categories match, the location is removed from the observable array. */
 				$.each( item.categories, function( index, value) {
+
 					if (value[1] === selectedCuisine()) {
+
 						filterOut = false;
 						return filterOut;
+
 					}
 				});
 
@@ -659,12 +663,15 @@ var viewModel = (function () {
 		   in the observable location array and removes the marker from the map
 		   if the location is no longer in the array. */
 		$.each(gmarkers, function (index, value ) {
+
 			var found = false;
+
 			$.each(locations(), function ( key, location ) {
 				if (location.name.indexOf(value.title) !== -1) {
 					found = true;
 				}
 			});
+
 			if (!found) {
 				value.setMap(null);
 			}
@@ -673,7 +680,9 @@ var viewModel = (function () {
 
 	/* Status of filter. If true, the clear button is enabled while the filter list is disabled.*/
 	var filterSelected = ko.computed(function() {
+
 		return (selectedCuisine() !== undefined);
+
 	});
 
 	/* When user clicks on clear button, locations repopulate with the original list and
@@ -699,6 +708,7 @@ var viewModel = (function () {
 	};
 
 	var clearInfoWindows = function() {
+
 		if (openInfoWindow.length !== 0) {
 			openInfoWindow[0].close();
 			openInfoWindow = [];
@@ -712,6 +722,7 @@ var viewModel = (function () {
 	};
 
 	$('.sidebar-toggle').click(function() {
+
 		if ($('#sidebar').hasClass('toggle')) {
 			$('#sidebar').removeClass('toggle');
 		} else {
