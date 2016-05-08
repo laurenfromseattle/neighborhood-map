@@ -341,7 +341,7 @@ Media Queries
  /* Extra Small Devices, Phones */
 @media only screen and (max-width: 480px) {
 
-	h1 {
+	.heading-bar h1 {
 		font-size: 1.2em;
 		line-height: 50px;
 	}
