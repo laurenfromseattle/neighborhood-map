@@ -24,7 +24,7 @@
 	<body>
 
 		<main>
-			<div id="heading-bar">
+			<div class="heading-bar">
 				<h1>Find a Restaurant in Your Hood</h1>
 				<p>
 					<span class="heading-bar-directions">Click on Pointers or List for Info</span>
@@ -32,9 +32,9 @@
 					<span class="heading-bar-directions">Filter by Cuisine</span>
 					<span class="heading-bar-forks"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
 					<span class="heading-bar-directions powered">Powered by</span>
-					<img class="yelp-attribution" src="img/yelp-logo.png" alt="Yelp logo" />
+					<img class="yelp-attribution" src="img/yelp-logo.png" alt="Yelp" />
 			</div>
-			<div id="sidebar">
+			<div class="sidebar">
 				<div class="sidebar-heading-container">
 					<div class="sidebar-heading-filter">
 						<select data-bind="options: cuisines, optionsCaption: 'Filter by cuisine...', value: selectedCuisine, enable: !filterSelected()"></select>
@@ -55,7 +55,7 @@
 						<div class="location-list-item-details">
 							<p data-bind="text: location.address[0]"></p>
 							<p class="location-list-review">
-								<img alt="Yelp star rating" data-bind="attr: { src: rating_img_url }" />
+								<img data-bind="attr: { src: rating_img_url, alt: 'Yelp rating: ' + rating }" />
 								<span class="location-list-review-count" data-bind="text: review_count"></span>
 							</p>
 							<p data-bind="text: snippet_text"></p>
@@ -64,17 +64,17 @@
 					</li>
 				</ul>
 			</div>
-			<div id="map-div" class="loading"></div>
+			<div class="map-div" class="loading"></div>
 		</main>
 
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-		<script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
-		<script type="text/javascript" src="js/lib/jquery.ui.touch-punch.min.js"></script>
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsY5n0dP1_Tn6AraoKwCael_MxHUFlupc" async defer></script>
-		<script type="text/javascript" src="js/lib/knockout-3.4.0.js"></script>
-		<script type="text/javascript" src="js/lib/oauth-signature.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+		<script src="js/lib/jquery-ui.min.js"></script>
+		<script src="js/lib/jquery.ui.touch-punch.min.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsY5n0dP1_Tn6AraoKwCael_MxHUFlupc" async defer></script>
+		<script src="js/lib/knockout-3.4.0.js"></script>
+		<script src="js/lib/oauth-signature.min.js"></script>
 		<!-- build:js -->
-		<script type="text/javascript" src="js/app.js"></script>
+		<script src="js/app.js"></script>
 		<!-- endbuild -->
 	</body>
 

@@ -180,6 +180,7 @@ var locationModel = (function () {
 				}
 			},
 			name: 'Streamline Tavern',
+			rating: 4.5,
 			rating_img_url: 'https://s3-media2.fl.yelpcdn.com/assets/2/www/img/99493c12711e/ico/stars/v1/stars_4_half.png',
 			review_count: 24,
 			snippet_text: 'Great dive bar for some pool. Food is usually limited to peanuts. I mostly love it because it replaced Jabu\'s.',
@@ -201,6 +202,7 @@ var locationModel = (function () {
 				}
 			},
 			name: 'Mecca Cafe',
+			rating: 4,
 			rating_img_url: 'https://s3-media4.fl.yelpcdn.com/assets/2/www/img/c2f3dd9799a5/ico/stars/v1/stars_4.png',
 			review_count: 421,
 			snippet_text: 'HUGE serving sizes of all-American diner food. Amazing bartenders. What more do you need?',
@@ -313,69 +315,68 @@ var locationModel = (function () {
 				url: baseURL,
 				data: parameters,
 				cache: true,
-				dataType: 'jsonp',
-				success: function( data ) {
-					if (data.businesses.length > 0) {
+				dataType: 'jsonp'
+			})
+			.done(function( data ) {
+				if (data.businesses.length > 0) {
 
-						apiCallCount++;
+					apiCallCount++;
 
-						$.each(data.businesses, function( key, value ) {
+					$.each(data.businesses, function( key, value ) {
 
-							/* Adds an observable property that will track if that location's marker
-							is selected, adding a corresponding style to that location in the list. */
-							value.selected = ko.observable(false);
+						/* Adds an observable property that will track if that location's marker
+						is selected, adding a corresponding style to that location in the list. */
+						value.selected = ko.observable(false);
 
-							/* Pushes location object into observable array */
-							viewModel.locations.push( value );
+						/* Pushes location object into observable array */
+						viewModel.locations.push( value );
 
-							/* Pushes location object into immutable array, stored
-							   in locationModel. This will be our permanent list so
-							   that we do not have to repeat calls to the api.  */
-							staticLocationList.push( value );
+						/* Pushes location object into immutable array, stored
+						   in locationModel. This will be our permanent list so
+						   that we do not have to repeat calls to the api.  */
+						staticLocationList.push( value );
 
-							/* Renders the gmarker and stores the gmarker in an
-							   array so that we can add/remove markers from the map. */
-							viewModel.renderMarker( value ); // create marker
+						/* Renders the gmarker and stores the gmarker in an
+						   array so that we can add/remove markers from the map. */
+						viewModel.renderMarker( value ); // create marker
 
-							/* Pushes the location object's cuisine categories into
-							   observable and immutable cuisine arrays if they are not
-							   already there. This will give us a list for the dropdown filter. */
-							$.each( value.categories, function( index, value) {
-								if (cuisines.indexOf( value[1]) === -1) {
-									viewModel.cuisines.push( value[1] );
-									cuisines.push( value[1] );
-								}
-							});
+						/* Pushes the location object's cuisine categories into
+						   observable and immutable cuisine arrays if they are not
+						   already there. This will give us a list for the dropdown filter. */
+						$.each( value.categories, function( index, value) {
+							if (cuisines.indexOf( value[1]) === -1) {
+								viewModel.cuisines.push( value[1] );
+								cuisines.push( value[1] );
+							}
 						});
+					});
 
-						/* Sort method for location objects courtesy of Stack Overflow, Ron Tornambe
-						http://stackoverflow.com/questions/8900732/javascript-sort-objects-in-an-array-
-						alphabetically-on-one-property-of-the-arra
-						*/
-						viewModel.locations.sort(function(a, b) {
-							return a.name.localeCompare(b.name);
-						});
-						viewModel.cuisines.sort();
-						updateParameters();
-						updateSignature();
-					} else {
+					/* Sort method for location objects courtesy of Stack Overflow, Ron Tornambe
+					http://stackoverflow.com/questions/8900732/javascript-sort-objects-in-an-array-
+					alphabetically-on-one-property-of-the-arra
+					*/
+					viewModel.locations.sort(function(a, b) {
+						return a.name.localeCompare(b.name);
+					});
+					viewModel.cuisines.sort();
+					updateParameters();
+					updateSignature();
+				} else {
 
-						if (apiCallCount === 0) {
-							alert('Sorry, Yelp can\'t find any restaurants in your area.');
+					if (apiCallCount === 0) {
+						alert('Sorry, Yelp can\'t find any restaurants in your area.');
 
-							defaultState();
-						}
-
+						defaultState();
 					}
-				},
 
-				error: function() {
-
-					alert( 'Sorry. We had issues talking to Yelp. Here are some locations we love in' +
-						' Lower Queen Anne, Seattle.');
-
-					defaultState();
 				}
+			})
+			.fail(function() {
+
+				alert( 'Sorry. We had issues talking to Yelp. Here are some locations we love in' +
+					' Lower Queen Anne, Seattle.');
+
+				defaultState();
 			});
 		};
 
@@ -397,7 +398,7 @@ var locationModel = (function () {
 
 var viewModel = (function () {
 
-	var mapDiv = document.getElementById('map-div');
+	var mapDiv = $('.map-div')[0];
 	var gmarkers = [];
 	var openInfoWindow = [];
 	var map;
@@ -542,7 +543,7 @@ var viewModel = (function () {
 				content: '<p class="infowindow-location-name">' + obj.name + '</p>' +
 				'<p class="infowindow-location-address">' + obj.location.address[0] + '</p>' +
 				'<p class="infowindow-location-rating">' +
-				'<img class="infowindow-location-stars" src="' + obj.rating_img_url + '" />' +
+				'<img class="infowindow-location-stars" alt="Yelp rating: ' + obj.rating + '" src="' + obj.rating_img_url + '" />' +
 				'<span class="infowindow-location-rating-count">' + obj.review_count + '&nbsp;reviews</span></p>' +
 				'<p class="infowindow-location-review">' + obj.snippet_text + '</p>' +
 				'<a class="infowindow-location-link" href="' + obj.url +

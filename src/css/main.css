@@ -22,19 +22,19 @@ body {
 sidebar
 ************************************************/
 
-#heading-bar {
+.heading-bar {
 	height: 100px;
 	text-align: center;
 }
 
-#heading-bar h1 {
+h1 {
 	background-color: #ff5f2e;
 	color: #fcbe32;
 	height: 50px;
 	margin: 0;
 }
 
-#heading-bar p {
+.heading-bar p {
 	align-items: center;
 	background-color: #e1eef6;
 	display: flex;
@@ -45,7 +45,7 @@ sidebar
 	margin: 0;
 }
 
-#heading-bar span {
+.heading-bar span {
 	padding: 10px;
 }
 
@@ -63,7 +63,7 @@ sidebar
 	padding-right: 10px;
 }
 
-#sidebar {
+.sidebar {
 	background-color: #05323e;
     max-height: 100vh;
     width: 320px;
@@ -286,7 +286,7 @@ sidebar
 Map
 ************************************************/
 
-#map-div {
+.map-div {
 	height: calc(100vh - 100px);
 	width: 100%;
 }
@@ -341,12 +341,12 @@ Media Queries
  /* Extra Small Devices, Phones */
 @media only screen and (max-width: 480px) {
 
-	#heading-bar h1 {
+	h1 {
 		font-size: 1.2em;
 		line-height: 50px;
 	}
 
-	#heading-bar span {
+	.heading-bar span {
 		max-width: 100px;
     	padding: 5px;
 	}
@@ -361,17 +361,17 @@ Media Queries
     	padding-right: 5px;
 	}
 
-	#map-div {
+	.map-div {
 		height: calc(100vh - 200px);
 		top: 100px;
 	}
 
-	#heading-bar span:nth-child(odd) {
+	.heading-bar span:nth-child(odd) {
     	font-size: 0.7em;
     	line-height: 1.2em;
 	}
 
-	#sidebar {
+	.sidebar {
 		width: 100%;
 	}
 
