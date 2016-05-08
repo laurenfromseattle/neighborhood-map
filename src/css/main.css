@@ -27,7 +27,7 @@ sidebar
 	text-align: center;
 }
 
-h1 {
+.heading-bar h1 {
 	background-color: #ff5f2e;
 	color: #fcbe32;
 	height: 50px;
