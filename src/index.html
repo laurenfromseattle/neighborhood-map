@@ -27,11 +27,12 @@
 			<div id="heading-bar">
 				<h1>Find a Restaurant in Your Hood</h1>
 				<p>
-					<span>Click on Pointers or List for Info</span>
-					<span><i class="fa fa-cutlery" aria-hidden="true"></i></span>
-					<span>Filter by Cuisine</span>
-					<span><i class="fa fa-cutlery" aria-hidden="true"></i></span>
-					<span>Thank Yelp Search API</span>
+					<span class="heading-bar-directions">Click on Pointers or List for Info</span>
+					<span class="heading-bar-forks"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
+					<span class="heading-bar-directions">Filter by Cuisine</span>
+					<span class="heading-bar-forks"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
+					<span class="heading-bar-directions powered">Powered by</span>
+					<img class="yelp-attribution" src="img/yelp-logo.png" alt="Yelp logo" />
 			</div>
 			<div id="sidebar">
 				<div class="sidebar-heading-container">
@@ -53,7 +54,10 @@
 						<p class="location-list-item-name" data-bind="text: name, click: $parent.openMarker"></p>
 						<div class="location-list-item-details">
 							<p data-bind="text: location.address[0]"></p>
-							<img data-bind="attr: { src: rating_img_url }" />
+							<p class="location-list-review">
+								<img alt="Yelp star rating" data-bind="attr: { src: rating_img_url }" />
+								<span class="location-list-review-count" data-bind="text: review_count"></span>
+							</p>
 							<p data-bind="text: snippet_text"></p>
 							<a data-bind="attr: { href: url }" target="_blank">Read Reviews on Yelp</a>
 						</div>
@@ -66,7 +70,7 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 		<script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="js/lib/jquery.ui.touch-punch.min.js"></script>
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsY5n0dP1_Tn6AraoKwCael_MxHUFlupc"></script>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsY5n0dP1_Tn6AraoKwCael_MxHUFlupc" async defer></script>
 		<script type="text/javascript" src="js/lib/knockout-3.4.0.js"></script>
 		<script type="text/javascript" src="js/lib/oauth-signature.min.js"></script>
 		<!-- build:js -->

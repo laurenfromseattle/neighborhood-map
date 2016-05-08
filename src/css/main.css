@@ -49,6 +49,20 @@ sidebar
 	padding: 10px;
 }
 
+.heading-bar-directions {
+	margin-top: 5px;
+}
+
+.heading-bar-forks {
+	line-height: 0;
+}
+
+.yelp-attribution {
+	margin-left: -5px;
+	max-height: 30px;
+	padding-right: 10px;
+}
+
 #sidebar {
 	background-color: #05323e;
     max-height: 100vh;
@@ -217,6 +231,19 @@ sidebar
 	transition: max-height 1s;
 }
 
+.location-list-review {
+    line-height: 0;
+}
+
+.location-list-review-count {
+	position: relative;
+	top: -3px;
+}
+
+.location-list-review-count:after {
+	content: ' reviews';
+}
+
 .location-list-item:nth-child(odd) .location-list-item-details {
 	border: 0 solid #e1eef6;
 	-webkit-transition: border-color 2s;
@@ -288,6 +315,11 @@ Map
     margin: 5px 0;
 }
 
+.infowindow-location-rating-count {
+	margin: 0 10px;
+	position: absolute;
+}
+
 .infowindow-location-link {
     background-color: #05323e;
     border-radius: 4px;
@@ -312,6 +344,21 @@ Media Queries
 	#heading-bar h1 {
 		font-size: 1.2em;
 		line-height: 50px;
+	}
+
+	#heading-bar span {
+		max-width: 100px;
+    	padding: 5px;
+	}
+
+	.heading-bar-directions.powered {
+		min-width: 70px;
+	}
+
+	.yelp-attribution {
+    	margin-left: -5;
+    	max-height: 20px;
+    	padding-right: 5px;
 	}
 
 	#map-div {

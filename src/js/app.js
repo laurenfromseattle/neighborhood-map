@@ -181,6 +181,7 @@ var locationModel = (function () {
 			},
 			name: 'Streamline Tavern',
 			rating_img_url: 'https://s3-media2.fl.yelpcdn.com/assets/2/www/img/99493c12711e/ico/stars/v1/stars_4_half.png',
+			review_count: 24,
 			snippet_text: 'Great dive bar for some pool. Food is usually limited to peanuts. I mostly love it because it replaced Jabu\'s.',
 			url: 'http://www.yelp.com/biz/streamline-tavern-seattle-2?utm_campaign=yelp_api&utm_medium=api_v2_search&utm_source=pr1wuv4t-ZC9wqQWVsJ68g'
 		},
@@ -201,6 +202,7 @@ var locationModel = (function () {
 			},
 			name: 'Mecca Cafe',
 			rating_img_url: 'https://s3-media4.fl.yelpcdn.com/assets/2/www/img/c2f3dd9799a5/ico/stars/v1/stars_4.png',
+			review_count: 421,
 			snippet_text: 'HUGE serving sizes of all-American diner food. Amazing bartenders. What more do you need?',
 			url: 'http://www.yelp.com/biz/mecca-cafe-seattle?utm_campaign=yelp_api&utm_medium=api_v2_search&utm_source=pr1wuv4t-ZC9wqQWVsJ68g'
 		}
@@ -414,42 +416,76 @@ var viewModel = (function () {
 			var mapOptions = mapModel.getMapOptions();
 			mapOptions.center = { lat: lat, lng: lng };
 
-			map = new google.maps.Map(mapDiv, mapOptions);
-			renderMap();
+			if (typeof google === 'object' && typeof google.maps === 'object') {
+				map = new google.maps.Map(mapDiv, mapOptions);
+				renderMap();
+			} else {
+				alert('Sorry, Google Maps data can\'t be loaded.');
+			}
 		};
 
 		var error = function(err) {
 
-			if (err.code === 1) {
-				alert( 'Don\'t want us to know where you are? That makes it a bit difficult' +
-			' to help you find a restaurant! Here are some places you can check out next time' +
-			' you are in Lower Queen Anne, Seattle.' );
-			} else if (err.code === 2) {
-				alert( 'We had a problem locating you. Here are some places you can check' +
-				' out next time you are in Lower Queen Anne, Seattle.' );
+			/* Google Maps API check, then geolocation error messages and default map load */
+			if (typeof google === 'object' && typeof google.maps === 'object') {
+
+				/* PERMISSION_DENIED */
+				if (err.code === 1) {
+
+					alert( 'Don\'t want us to know where you are? That makes it a bit difficult' +
+				' to help you find a restaurant! Here are some places you can check out next time' +
+				' you are in Lower Queen Anne, Seattle.' );
+
+				/* POSITION_UNAVAILABLE */
+				} else if (err.code === 2) {
+
+					alert( 'We had a problem locating you. Here are some places you can check' +
+					' out next time you are in Lower Queen Anne, Seattle.' );
+
+				/* TIMEOUT */
+				} else {
+
+					alert( 'Locating you is taking too much time. Here are some places you can check' +
+					' out next time you are in Lower Queen Anne, Seattle.' );
+
+				}
+
+				map = new google.maps.Map(mapDiv, mapModel.getMapOptions());
+				renderMap();
+
 			} else {
-				alert( 'Locating you is taking too much time. Here are some places you can check' +
-				' out next time you are in Lower Queen Anne, Seattle.' );
+
+				alert('Sorry, Google Maps data can\'t be loaded.');
+
 			}
 
-			map = new google.maps.Map(mapDiv, mapModel.getMapOptions());
-			renderMap();
 		};
 
 		var options = {
-		  timeout: 5000,
+		  timeout: 10000,
 		  maximumAge: 0
 		};
 
 		navigator.geolocation.getCurrentPosition(success, error, options);
 
+	/* Runs if geolocation is not supported */
 	} else {
 
-		map = new google.maps.Map(mapDiv, mapModel.getMapOptions());
-		renderMap();
+		/* Google Maps API check and map load */
+		if (typeof google === 'object' && typeof google.maps === 'object') {
 
-		alert('Your browser does not support geolocation. That means we have no idea where you are.' +
+			alert('Your browser does not support geolocation. That means we have no idea where you are.' +
 			' Here are some places you can check out next time you are in Lower Queen Anne, Seattle.');
+
+			map = new google.maps.Map(mapDiv, mapModel.getMapOptions());
+			renderMap();
+
+		} else {
+
+			alert('Sorry, Google Maps data can\'t be loaded.');
+
+		}
+
 	}
 
 	/* Removes class that holds animated gif in the map div. */
@@ -505,7 +541,9 @@ var viewModel = (function () {
 			marker.infowindow = new google.maps.InfoWindow({
 				content: '<p class="infowindow-location-name">' + obj.name + '</p>' +
 				'<p class="infowindow-location-address">' + obj.location.address[0] + '</p>' +
-				'<img class="infowindow-location-rating" src="' + obj.rating_img_url + '" />' +
+				'<p class="infowindow-location-rating">' +
+				'<img class="infowindow-location-stars" src="' + obj.rating_img_url + '" />' +
+				'<span class="infowindow-location-rating-count">' + obj.review_count + '&nbsp;reviews</span></p>' +
 				'<p class="infowindow-location-review">' + obj.snippet_text + '</p>' +
 				'<a class="infowindow-location-link" href="' + obj.url +
 				'" target="_blank">Read reviews on Yelp</a>',
