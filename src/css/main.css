@@ -10,12 +10,14 @@ html {
   box-sizing: border-box;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
 body {
-	font-family: 'Kalam', sans-serif;
+	font-family: "Kalam", sans-serif;
 }
 
 /************************************************

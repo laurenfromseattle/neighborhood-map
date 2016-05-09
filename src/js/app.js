@@ -406,53 +406,80 @@ var viewModel = (function () {
 	var cuisines = ko.observableArray([]);
 	var selectedCuisine = ko.observable();
 
-	/* TO DO: GEOLOCATION */
+	var initMap = function() {
 
-	if (navigator.geolocation) {
+		if (navigator.geolocation) {
 
-		var success = function(position) {
-			var lat = position.coords.latitude;
-			var lng = position.coords.longitude;
+			var success = function(position) {
+				var lat = position.coords.latitude;
+				var lng = position.coords.longitude;
 
-			var mapOptions = mapModel.getMapOptions();
-			mapOptions.center = { lat: lat, lng: lng };
+				var mapOptions = mapModel.getMapOptions();
+				mapOptions.center = { lat: lat, lng: lng };
 
-			if (typeof google === 'object' && typeof google.maps === 'object') {
- 				map = new google.maps.Map(mapDiv, mapOptions);
+				if (typeof google === 'object' && typeof google.maps === 'object') {
+	 				map = new google.maps.Map(mapDiv, mapOptions);
 
-				renderMap();
+					renderMap();
 
-			} else {
-
-				alert('Sorry, Google Maps data can\'t be loaded.');
-			}
-		};
-
-		var error = function(err) {
-
-			/* Google Maps API check, then geolocation error messages and default map load */
-			if (typeof google === 'object' && typeof google.maps === 'object') {
-
-				/* PERMISSION_DENIED */
-				if (err.code === 1) {
-
-					alert( 'Don\'t want us to know where you are? That makes it a bit difficult' +
-				' to help you find a restaurant! Here are some places you can check out next time' +
-				' you are in Lower Queen Anne, Seattle.' );
-
-				/* POSITION_UNAVAILABLE */
-				} else if (err.code === 2) {
-
-					alert( 'We had a problem locating you. Here are some places you can check' +
-					' out next time you are in Lower Queen Anne, Seattle.' );
-
-				/* TIMEOUT */
 				} else {
 
-					alert( 'Locating you is taking too much time. Here are some places you can check' +
-					' out next time you are in Lower Queen Anne, Seattle.' );
+					alert('Sorry, Google Maps data can\'t be loaded.');
+				}
+			};
+
+			var error = function(err) {
+
+				/* Google Maps API check, then geolocation error messages and default map load */
+				if (typeof google === 'object' && typeof google.maps === 'object') {
+
+					/* PERMISSION_DENIED */
+					if (err.code === 1) {
+
+						alert( 'Don\'t want us to know where you are? That makes it a bit difficult' +
+					' to help you find a restaurant! Here are some places you can check out next time' +
+					' you are in Lower Queen Anne, Seattle.' );
+
+					/* POSITION_UNAVAILABLE */
+					} else if (err.code === 2) {
+
+						alert( 'We had a problem locating you. Here are some places you can check' +
+						' out next time you are in Lower Queen Anne, Seattle.' );
+
+					/* TIMEOUT */
+					} else {
+
+						alert( 'Locating you is taking too much time. Here are some places you can check' +
+						' out next time you are in Lower Queen Anne, Seattle.' );
+
+					}
+
+					map = new google.maps.Map(mapDiv, mapModel.getMapOptions());
+					renderMap();
+
+				} else {
+
+					alert('Sorry, Google Maps data can\'t be loaded.');
 
 				}
+
+			};
+
+			var options = {
+			  timeout: 10000,
+			  maximumAge: 0
+			};
+
+			navigator.geolocation.getCurrentPosition(success, error, options);
+
+		/* Runs if geolocation is not supported */
+		} else {
+
+			/* Google Maps API check and map load */
+			if (typeof google === 'object' && typeof google.maps === 'object') {
+
+				alert('Your browser does not support geolocation. That means we have no idea where you are.' +
+				' Here are some places you can check out next time you are in Lower Queen Anne, Seattle.');
 
 				map = new google.maps.Map(mapDiv, mapModel.getMapOptions());
 				renderMap();
@@ -463,34 +490,9 @@ var viewModel = (function () {
 
 			}
 
-		};
-
-		var options = {
-		  timeout: 10000,
-		  maximumAge: 0
-		};
-
-		navigator.geolocation.getCurrentPosition(success, error, options);
-
-	/* Runs if geolocation is not supported */
-	} else {
-
-		/* Google Maps API check and map load */
-		if (typeof google === 'object' && typeof google.maps === 'object') {
-
-			alert('Your browser does not support geolocation. That means we have no idea where you are.' +
-			' Here are some places you can check out next time you are in Lower Queen Anne, Seattle.');
-
-			map = new google.maps.Map(mapDiv, mapModel.getMapOptions());
-			renderMap();
-
-		} else {
-
-			alert('Sorry, Google Maps data can\'t be loaded.');
-
 		}
 
-	}
+	};
 
 	/* Removes class that holds animated gif in the map div. */
 	var removeLoadingState = function() {
@@ -765,20 +767,22 @@ var viewModel = (function () {
 
 	$('.sidebar-toggle').click(function() {
 
-		if ($('#sidebar').hasClass('toggle')) {
-			$('#sidebar').removeClass('toggle');
+		if ($('.sidebar').hasClass('toggle')) {
+			$('.sidebar').removeClass('toggle');
 		} else {
-			$('#sidebar').addClass('toggle');
+			$('.sidebar').addClass('toggle');
 		}
 	});
 
-    $( "#sidebar" ).draggable({
+    $( ".sidebar" ).draggable({
     	axis: 'x',
     	containment: 'parent',
     	handle: '.slider'
     });
 
 	return {
+
+		initMap: initMap,
 
 		locations: locations,
 
