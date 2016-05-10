@@ -75,7 +75,7 @@
 		<!-- build:js -->
 		<script src="js/app.js"></script>
 		<!-- endbuild -->
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsY5n0dP1_Tn6AraoKwCael_MxHUFlupc&callback=viewModel.initMap" async defer></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsY5n0dP1_Tn6AraoKwCael_MxHUFlupc&callback=viewModel.initMap" onerror="viewModel.mapLoadError()" async defer></script>
 	</body>
 
 </html>
