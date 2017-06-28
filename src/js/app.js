@@ -238,10 +238,11 @@ var locationModel = (function () {
 
 	var getLocations = function() {
 		var bounds = mapModel.getMapBounds();
-		var swLat = bounds.H.H;
-		var swLong = bounds.j.H;
-		var neLat = bounds.H.j;
-		var neLong = bounds.j.j;
+		var sw = bounds.getSouthWest();
+		var swLat = bounds.getSouthWest().lat();
+		var swLong = bounds.getSouthWest().lng();
+		var neLat = bounds.getNorthEast().lat();
+		var neLong = bounds.getNorthEast().lng();
 		var CONSUMER_KEY = 'pr1wuv4t-ZC9wqQWVsJ68g';
 		var CONSUMER_SECRET = '9bndcm-Ho1RhwE5btDVJYJKbv4w';
 		var TOKEN = 'N57vSZkvDXsVAwk7M8j8qRCKNtwS5ywi';
